@@ -5,8 +5,18 @@ require("dotenv").config();
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: "*",
+  methods: ["GET", "POST", "OPTIONS"],
+}));
+
 app.use(express.json());
+
+app.get("/", (req, res) => {
+  res.send("Backend Running");
+});
+
+// your contact route here...
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -36,8 +46,11 @@ app.post("/api/contact", async (req, res) => {
 
     res.status(200).json({ success: true });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ success: false });
+    console.error("Contact Form Error:", error);
+    res.status(500).json({
+  success: false,
+  error: error.message,
+});
   }
 });
 
@@ -46,3 +59,16 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on ${PORT}`);
 });
+
+app.get("/", (req, res) => {
+  res.send("Backend Running");
+});
+
+transporter.verify((error, success) => {
+  if (error) {
+    console.log("Email Error:", error);
+  } else {
+    console.log("Email Server Ready");
+  }
+});
+
