@@ -19,7 +19,9 @@ app.get("/", (req, res) => {
 // your contact route here...
 
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+  host: "smtp.gmail.com",
+  port: 587,
+  secure: false,
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
@@ -62,13 +64,5 @@ app.listen(PORT, () => {
 
 app.get("/", (req, res) => {
   res.send("Backend Running");
-});
-
-transporter.verify((error, success) => {
-  if (error) {
-    console.log("Email Error:", error);
-  } else {
-    console.log("Email Server Ready");
-  }
 });
 
